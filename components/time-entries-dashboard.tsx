@@ -7,6 +7,8 @@ export async function TimeEntriesDashboard() {
 
    const categorizedEntries = await categorizeTimeEntries(timeEntries);
 
+   console.log("categorizedEntries", categorizedEntries);
+
    return (
       <div className="space-y-6">
          <div className="bg-white p-6 rounded-lg shadow">

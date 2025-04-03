@@ -1,10 +1,8 @@
 import { connectToDatabase } from "@/lib/mongodb";
 import type { CategorizedTimeEntry, TimeEntry } from "@/lib/types";
-import { OpenAI } from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const openai = new OpenAI({
-   apiKey: process.env.OPENAI_API_KEY,
-});
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 const CATEGORIES = [
    "Frontend Development",
@@ -19,9 +17,9 @@ const CATEGORIES = [
 ];
 
 interface Category {
-   id: any;
-   category: any;
-   confidence: any;
+   id: string;
+   category: string;
+   confidence: string;
 }
 
 export async function categorizeTimeEntries(
@@ -29,14 +27,16 @@ export async function categorizeTimeEntries(
 ): Promise<CategorizedTimeEntry[]> {
    if (timeEntries.length === 0) return [];
 
+   // First, check if we have cached categorizations in the database
    const db = await connectToDatabase();
-   const categorizations = db.collection("categorizations");
+   const categorizationsCollection = db.collection("categorizations");
 
    const entryIds = timeEntries.map((entry) => entry.id);
-   const existingCategorizations = await categorizations
+   const existingCategorizations = await categorizationsCollection
       .find({ entryId: { $in: entryIds } })
       .toArray();
 
+   // Create a map of existing categorizations for quick lookup
    const categorizationMap = new Map();
    existingCategorizations.forEach((cat) => {
       categorizationMap.set(cat.entryId, {
@@ -49,47 +49,61 @@ export async function categorizeTimeEntries(
       (entry) => !categorizationMap.has(entry.id)
    );
 
-   // If there are entries to categorize, use the AI model
    if (entriesToCategorize.length > 0) {
-      const batchSize = 10; // Process in batches to avoid rate limits
+      const batchSize = 5; // Process in smaller batches for Gemini
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
       for (let i = 0; i < entriesToCategorize.length; i += batchSize) {
          const batch = entriesToCategorize.slice(i, i + batchSize);
 
+         // Prepare the prompt for the Gemini model
          const prompt = `
-        Categorize the following time entries into one of these categories:
-        ${CATEGORIES.join(", ")}
+        Task: Categorize the following time entries into predefined categories.
 
-        For each entry, provide the category and a confidence score between 0 and 1.
-        Format your response as JSON with the structure:
-        [{ "id": "entry_id", "category": "category_name", "confidence": 0.95 }]
+        Categories:
+        ${CATEGORIES.join(", ")}
 
         Time entries:
         ${batch
            .map(
-              (entry) =>
-                 `ID: ${entry.id}, Description: ${
+              (entry, index) =>
+                 `${index + 1}. ID: ${entry.id}, Description: ${
                     entry.description || "No description"
                  }`
            )
            .join("\n")}
+
+        Instructions:
+        - Analyze each time entry description and assign it to the most appropriate category
+        - For each entry, provide a confidence score between 0 and 1
+        - Format your response as a valid JSON array with this structure:
+        [
+          {
+            "id": "entry_id",
+            "category": "category_name",
+            "confidence": 0.95
+          }
+        ]
+        - Only include the JSON array in your response, no other text
       `;
 
          try {
-            const response = await openai.chat.completions.create({
-               model: "gpt-4o",
-               messages: [{ role: "user", content: prompt }],
-               temperature: 0.3,
-               response_format: { type: "json_object" },
-            });
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const text = response.text();
 
-            const content = response.choices[0].message.content;
-            if (!content) continue;
+            // Extract JSON from the response
+            const jsonMatch = text.match(/\[[\s\S]*\]/);
+            if (!jsonMatch) {
+               console.error("Failed to extract JSON from Gemini response");
+               continue;
+            }
 
-            const result = JSON.parse(content);
+            try {
+               const categorizations = JSON.parse(jsonMatch[0]);
 
-            if (Array.isArray(result.categorizations)) {
-               const categorizationsToInsert = result.categorizations.map(
+               // Store the categorizations in the database
+               const categorizationsToInsert = categorizations.map(
                   (cat: Category) => ({
                      entryId: cat.id,
                      category: cat.category,
@@ -99,19 +113,29 @@ export async function categorizeTimeEntries(
                );
 
                if (categorizationsToInsert.length > 0) {
-                  await categorizations.insertMany(categorizationsToInsert);
+                  const result = await categorizationsCollection.insertMany(
+                     categorizationsToInsert
+                  );
                }
 
-               // Update the categorization map
-               result.categorizations.forEach((cat: Category) => {
+               categorizations.forEach((cat: Category) => {
                   categorizationMap.set(cat.id, {
                      category: cat.category,
                      aiConfidence: cat.confidence,
                   });
                });
+            } catch (jsonError) {
+               console.error(
+                  "Error parsing JSON from Gemini response:",
+                  jsonError
+               );
             }
          } catch (error) {
-            console.error("Error categorizing time entries:", error);
+            console.error(
+               "Error categorizing time entries with Gemini:",
+               error
+            );
+
             batch.forEach((entry) => {
                categorizationMap.set(entry.id, {
                   category: "Other",
@@ -123,7 +147,7 @@ export async function categorizeTimeEntries(
    }
 
    return timeEntries.map((entry) => {
-      const categorization = categorizationMap.get(entry.id) || {
+      const categorization = categorizationMap.get(entry.id?.toString()) || {
          category: "Other",
          aiConfidence: 0,
       };
