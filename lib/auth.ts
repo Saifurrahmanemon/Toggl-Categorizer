@@ -71,7 +71,6 @@ export const authOptions: NextAuthOptions = {
                );
 
                const res = await sessionCreationResponse.json();
-               console.log("session response -> ", res, "");
 
                if (!response.ok) {
                   throw new Error("Authentication failed");

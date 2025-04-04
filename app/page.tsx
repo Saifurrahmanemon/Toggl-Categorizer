@@ -1,6 +1,5 @@
-import { Header } from "@/components/header";
+import { DashboardContent } from "@/components/dashboard-content";
 import { LoadingSpinner } from "@/components/loading-spinner";
-import { TimeEntriesDashboard } from "@/components/time-entries-dashboard";
 import { Button } from "@/components/ui/button";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
@@ -20,7 +19,11 @@ export default async function Home() {
                   Automatically categorize your Toggl time entries using AI.
                </p>
                <div className="flex justify-center">
-                  <Button asChild size="lg">
+                  <Button
+                     asChild
+                     size="lg"
+                     className="bg-toggl-red hover:bg-toggl-darkRed"
+                  >
                      <a href="/api/auth/signin">Sign in with Toggl</a>
                   </Button>
                </div>
@@ -30,14 +33,17 @@ export default async function Home() {
    }
 
    return (
-      <div className="min-h-screen flex flex-col">
-         <Header userName={session.user?.name || "User"} />
-         <div className="container mx-auto py-8 px-4 flex-1">
-            <h1 className="text-3xl font-bold mb-8">Your Time Entries</h1>
-            <Suspense fallback={<LoadingSpinner />}>
-               <TimeEntriesDashboard />
-            </Suspense>
+      <main className="p-6">
+         <div className="mb-6">
+            <h1 className="text-2xl font-bold">Dashboard</h1>
+            <p className="text-gray-500">
+               Overview of your time entries and categories
+            </p>
          </div>
-      </div>
+
+         <Suspense fallback={<LoadingSpinner />}>
+            <DashboardContent />
+         </Suspense>
+      </main>
    );
 }

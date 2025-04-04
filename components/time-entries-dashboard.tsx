@@ -1,22 +1,21 @@
-import { TimeEntryList } from "@/components/time-entry-list";
-import { categorizeTimeEntries } from "@/lib/categorization";
-import { getTimeEntries } from "@/lib/toggl";
+import { getTimeEntries } from "@/lib/toggl"
+import { categorizeTimeEntries } from "@/lib/categorization"
+import { TimeEntryList } from "@/components/time-entry-list"
 
 export async function TimeEntriesDashboard() {
-   const timeEntries = await getTimeEntries();
+  // Fetch time entries from Toggl
+  const timeEntries = await getTimeEntries()
 
-   const categorizedEntries = await categorizeTimeEntries(timeEntries);
+  // Categorize time entries using AI
+  const categorizedEntries = await categorizeTimeEntries(timeEntries)
 
-   console.log("categorizedEntries", categorizedEntries);
-
-   return (
-      <div className="space-y-6">
-         <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">
-               Your Categorized Time Entries
-            </h2>
-            <TimeEntryList entries={categorizedEntries} />
-         </div>
+  return (
+    <div className="space-y-6">
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h2 className="text-xl font-semibold mb-4">Your Categorized Time Entries</h2>
+        <TimeEntryList entries={categorizedEntries} />
       </div>
-   );
+    </div>
+  )
 }
+

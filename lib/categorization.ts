@@ -19,7 +19,7 @@ const CATEGORIES = [
 interface Category {
    id: string;
    category: string;
-   confidence: string;
+   confidence: number;
 }
 
 export async function categorizeTimeEntries(
@@ -27,7 +27,6 @@ export async function categorizeTimeEntries(
 ): Promise<CategorizedTimeEntry[]> {
    if (timeEntries.length === 0) return [];
 
-   // First, check if we have cached categorizations in the database
    const db = await connectToDatabase();
    const categorizationsCollection = db.collection("categorizations");
 
@@ -36,8 +35,10 @@ export async function categorizeTimeEntries(
       .find({ entryId: { $in: entryIds } })
       .toArray();
 
-   // Create a map of existing categorizations for quick lookup
-   const categorizationMap = new Map();
+   const categorizationMap = new Map<
+      string,
+      { category: string; aiConfidence?: number }
+   >();
    existingCategorizations.forEach((cat) => {
       categorizationMap.set(cat.entryId, {
          category: cat.category,

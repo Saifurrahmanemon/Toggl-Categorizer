@@ -12,11 +12,9 @@ export async function updateTimeEntryCategory({
    const db = await connectToDatabase();
    const categorizationsCollection = db.collection("categorizations");
 
-   // Check if we already have a categorization for this entry
    const existing = await categorizationsCollection.findOne({ entryId });
 
    if (existing) {
-      // Update the existing categorization
       await categorizationsCollection.updateOne(
          { entryId },
          {
@@ -28,7 +26,6 @@ export async function updateTimeEntryCategory({
          }
       );
    } else {
-      // Create a new categorization
       await categorizationsCollection.insertOne({
          entryId,
          category,
@@ -38,7 +35,6 @@ export async function updateTimeEntryCategory({
       });
    }
 
-   // Store this correction for model improvement
    const correctionsCollection = db.collection("categoryCorrections");
    await correctionsCollection.insertOne({
       entryId,
@@ -47,8 +43,7 @@ export async function updateTimeEntryCategory({
       timestamp: new Date(),
    });
 
-   // Revalidate the page to show the updated data
-   revalidatePath("/");
+   revalidatePath("/entries");
 
    return { success: true };
 }
