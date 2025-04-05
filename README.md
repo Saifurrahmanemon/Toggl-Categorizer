@@ -50,8 +50,8 @@ TOGGL_API_TOKEN=your_toggl_api_token
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd toggl
+git clone https://github.com/Saifurrahmanemon/Toggl-Categorizer.git
+cd Toggl-Categorizer
 ```
 
 2. Install dependencies:
