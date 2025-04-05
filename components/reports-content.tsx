@@ -13,10 +13,7 @@ export async function ReportsContent() {
 
    return (
       <div className="space-y-6">
-         {/* Date range selector would go here */}
-
          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Category distribution pie chart */}
             <div className="bg-white p-6 rounded-lg shadow">
                <h2 className="text-lg font-semibold mb-4">
                   Category Distribution
@@ -24,14 +21,12 @@ export async function ReportsContent() {
                <CategoryDistributionChart entries={categorizedEntries} />
             </div>
 
-            {/* Weekly activity chart */}
             <div className="bg-white p-6 rounded-lg shadow">
                <h2 className="text-lg font-semibold mb-4">Weekly Activity</h2>
                <WeeklyActivityChart entries={categorizedEntries} />
             </div>
          </div>
 
-         {/* Category breakdown */}
          <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-lg font-semibold mb-4">Category Breakdown</h2>
             <CategoryBreakdown entries={categorizedEntries} />
