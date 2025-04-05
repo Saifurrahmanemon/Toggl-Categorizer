@@ -26,7 +26,6 @@ export async function getTimeEntries(): Promise<TimeEntry[]> {
                Authorization: `Basic ${auth}`,
                "Content-Type": "application/json",
             },
-            cache: "no-store",
          }
       );
 

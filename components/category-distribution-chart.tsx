@@ -23,7 +23,6 @@ export function CategoryDistributionChart({
    useEffect(() => {
       if (!entries.length) return;
 
-      // Group entries by category
       const categoryMap = new Map();
 
       entries.forEach((entry) => {

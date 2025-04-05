@@ -1,6 +1,5 @@
 "use client";
 
-import { EditCategoryDialog } from "@/components/edit-category-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -156,7 +155,7 @@ export function TimeEntryTable({ entries }: TimeEntryTableProps) {
                      <TableHead>Start Time</TableHead>
                      <TableHead>Duration</TableHead>
                      <TableHead>Category</TableHead>
-                     <TableHead className="text-right">Actions</TableHead>
+                     {/* <TableHead className="text-right">Actions</TableHead> */}
                   </TableRow>
                </TableHeader>
                <TableBody>
@@ -199,9 +198,9 @@ export function TimeEntryTable({ entries }: TimeEntryTableProps) {
                                     </Badge>
                                  )}
                            </TableCell>
-                           <TableCell className="text-right">
+                           {/* <TableCell className="text-right">
                               <EditCategoryDialog entry={entry} />
-                           </TableCell>
+                           </TableCell> */}
                         </TableRow>
                      ))
                   )}
