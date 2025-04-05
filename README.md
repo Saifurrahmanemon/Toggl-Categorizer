@@ -5,6 +5,9 @@ An AI-powered application that automatically categorizes your Toggl time entries
 ## Demo
 
 
+https://github.com/user-attachments/assets/c26164d0-be5d-4a99-920e-933ae297e6c5
+
+
 ## Features
 
 - 🔐 Secure authentication with Toggl credentials
