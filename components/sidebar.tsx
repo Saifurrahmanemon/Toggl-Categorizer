@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { BarChart3, Clock, Home, LogOut, Menu, X } from "lucide-react";
+import { BarChart3, Clock, Home, Info, LogOut, Menu, X } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -25,7 +25,7 @@ export function Sidebar({ userName }: SidebarProps) {
       { name: "Time Entries", href: "/entries", icon: Clock },
       { name: "Reports", href: "/reports", icon: BarChart3 },
       // { name: "Categories", href: "/categories", icon: Filter },
-      // { name: "Settings", href: "/settings", icon: Settings },
+      { name: "About", href: "/about", icon: Info },
    ];
 
    return (

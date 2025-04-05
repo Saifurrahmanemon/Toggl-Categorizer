@@ -1,12 +1,13 @@
 import { DebugPanel } from "@/components/debug-panel";
 import { Sidebar } from "@/components/sidebar";
 import { authOptions } from "@/lib/auth";
+import { isDev } from "@/lib/utils";
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { Inter } from "next/font/google";
 import type React from "react";
 import "./globals.css";
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -34,7 +35,8 @@ export default async function RootLayout({
             ) : (
                children
             )}
-            {session && <DebugPanel />}
+            {isDev && session && <DebugPanel />}
+            <Analytics />
          </body>
       </html>
    );

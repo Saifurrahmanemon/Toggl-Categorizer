@@ -11,7 +11,7 @@ export async function getTimeEntries(): Promise<TimeEntry[]> {
    }
 
    const startDate = new Date();
-   startDate.setDate(startDate.getDate() - 30);
+   startDate.setDate(startDate.getDate() - 7);
 
    const startDateString = startDate.toISOString();
    const endDateString = new Date().toISOString();
@@ -26,6 +26,7 @@ export async function getTimeEntries(): Promise<TimeEntry[]> {
                Authorization: `Basic ${auth}`,
                "Content-Type": "application/json",
             },
+            cache: "no-store",
          }
       );
 

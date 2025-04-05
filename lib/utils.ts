@@ -6,6 +6,8 @@ export function cn(...inputs: ClassValue[]) {
    return twMerge(clsx(inputs));
 }
 
+export const isDev = process.env.NODE_ENV === "development";
+
 const algorithm = "aes-256-cbc";
 const secretKey = crypto
    .createHash("sha256")

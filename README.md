@@ -1,6 +1,9 @@
-# Toggl Time Tracking Application
+# Toggl Categorizer
 
-A modern web application for tracking and analyzing time entries using the Toggl API. This application provides a user-friendly interface for managing time entries, categorizing them, and generating insightful reports.
+An AI-powered application that automatically categorizes your Toggl time entries, providing insightful analytics and visualizations of your time tracking data.
+
+## Demo
+
 
 ## Features
 
@@ -10,7 +13,6 @@ A modern web application for tracking and analyzing time entries using the Toggl
 - 🏷️ Custom categorization of time entries
 - 📈 Weekly activity tracking
 - 📱 Responsive design for mobile and desktop
-- 🌙 Dark/Light mode support
 
 ## Tech Stack
 
@@ -43,17 +45,20 @@ TOGGL_API_TOKEN=your_toggl_api_token
 ## Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd toggl
 ```
 
 2. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
 3. Run the development server:
+
 ```bash
 pnpm dev
 ```
@@ -77,35 +82,18 @@ The application will be available at `http://localhost:3000`
 └── public/              # Static assets
 ```
 
-## Key Components
+## Overview
 
-### Authentication
-- Secure login using Toggl credentials
-- JWT-based session management
-- Protected routes and API endpoints
+Toggl Categorizer connects to your Toggl account and uses Google's Gemini AI to automatically categorize your time entries. It provides a dashboard with visualizations and analytics to help you understand how you spend your time.
 
-### Time Entry Management
-- Create, edit, and delete time entries
-- Real-time synchronization with Toggl
-- Bulk operations support
+## Features
 
-### Analytics and Reporting
-- Weekly activity charts
-- Category distribution analysis
-- Time entry statistics
-- Custom date range filtering
-
-### Categorization System
-- Custom categories for time entries
-- Bulk categorization
-- Category management interface
-
-## API Integration
-
-The application integrates with the Toggl API for:
-- Time entry synchronization
-- User authentication
-- Project and workspace data
+- **AI-Powered Categorization**: Automatically categorizes your Toggl time entries using Google's Gemini AI
+- **Interactive Dashboard**: View time statistics, category distribution, and recent entries
+- **Detailed Reports**: Analyze your time data with charts and breakdowns
+- **Time Entry Management**: View, filter, and edit categorized time entries
+- **Multi-level Caching**: Efficient caching strategy for improved performance
+- **Responsive Design**: Works on desktop and mobile devices
 
 ## Contributing
 
