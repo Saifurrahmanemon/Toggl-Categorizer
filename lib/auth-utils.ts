@@ -7,7 +7,7 @@ export async function requireAuth() {
    const session = await getServerSession(authOptions);
 
    if (!session) {
-      redirect("/api/auth/signin");
+      redirect("/auth/signin");
    }
 
    return session;
@@ -17,7 +17,7 @@ export async function requireRole(role: string) {
    const session = await getServerSession(authOptions);
 
    if (!session) {
-      redirect("/api/auth/signin");
+      redirect("/auth/signin");
    }
 
    return session;
