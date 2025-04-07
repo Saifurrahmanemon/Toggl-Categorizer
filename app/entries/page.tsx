@@ -1,8 +1,11 @@
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { TimeEntriesList } from "@/components/time-entries-list";
+import { requireAuth } from "@/lib/auth-utils";
 import { Suspense } from "react";
 
-export default function EntriesPage() {
+export default async function EntriesPage() {
+   await requireAuth();
+
    return (
       <main className="p-6">
          <div className="mb-6">

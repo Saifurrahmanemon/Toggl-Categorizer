@@ -1,8 +1,11 @@
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { ReportsContent } from "@/components/reports-content";
+import { requireAuth } from "@/lib/auth-utils";
 import { Suspense } from "react";
 
-export default function ReportsPage() {
+export default async function ReportsPage() {
+   await requireAuth();
+
    return (
       <main className="p-6">
          <div className="mb-6">
